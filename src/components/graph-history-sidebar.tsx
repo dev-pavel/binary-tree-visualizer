@@ -1,12 +1,19 @@
+'use client'
+
 import {Sidebar, SidebarContent, SidebarHeader} from "@/components/ui/sidebar";
+import {useGraphsStore} from "@/providers/graphs-store-provider";
+import {useEffect} from "react";
 
 
 export function GraphHistorySidebar() {
-    const graphHistory = [
-        {id: 1, name: 'Graph 1', date: '2023-05-01'},
-        {id: 2, name: 'Graph 2', date: '2023-05-02'},
-        {id: 3, name: 'Graph 3', date: '2023-05-03'},
-    ]
+    const graphs = useGraphsStore(store => store.graphs)
+    const changeGraph = useGraphsStore(store => store.changeGraph)
+    const getGraphs = useGraphsStore(store => store.getGraphs)
+
+
+    useEffect(() => {
+        getGraphs()
+    }, [getGraphs]);
 
     return (
         <Sidebar>
@@ -15,9 +22,13 @@ export function GraphHistorySidebar() {
             </SidebarHeader>
             <SidebarContent>
                 <ul className="space-y-2">
-                    {graphHistory.map((graph) => (
-                        <li key={graph.id} className="p-2 hover:bg-accent rounded-md cursor-pointer">
-                            <p className="font-medium">{graph.name}</p>
+                    {graphs.map((graph) => (
+                        <li
+                            key={graph.id}
+                            className="p-2 hover:bg-accent rounded-md cursor-pointer"
+                            onClick={() => changeGraph(graph.id)}
+                        >
+                            <p className="font-medium">{graph.title}</p>
                             <p className="text-sm text-muted-foreground">{graph.date}</p>
                         </li>
                     ))}
